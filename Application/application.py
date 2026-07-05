@@ -1,26 +1,38 @@
 """
 Loan Prediction Application - Indian Rupee Version with EMI Calculator
 """
-from flask import Flask, render_template, request, jsonify
-import pandas as pd
-from model import LoanPredictionModel
 import os
+import sys
+from pathlib import Path
+
+import pandas as pd
+from flask import Flask, jsonify, render_template, request
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from model import LoanPredictionModel
 
 # Create Flask application
-application = Flask(__name__)
+application = Flask(
+    __name__,
+    template_folder=str(PROJECT_ROOT / "templates"),
+    static_folder=str(PROJECT_ROOT / "static"),
+)
 app = application  # Alias for local development
 
 # Load the trained model
 model = LoanPredictionModel()
-model_path = 'loan_model.pkl'
+model_path = PROJECT_ROOT / "model" / "loan_model.pkl"
 
 # Check if model file exists and load it
-if not os.path.exists(model_path):
+if not model_path.exists():
     print(f"ERROR: Model file '{model_path}' not found!")
     print(f"Current directory: {os.getcwd()}")
 else:
     try:
-        model.load_model(model_path)
+        model.load_model(str(model_path))
         print("Model loaded successfully!")
     except Exception as e:
         print(f"ERROR loading model: {e}")
@@ -161,5 +173,6 @@ if __name__ == "__main__":
     # Local development
     print("Starting Loan Prediction System...")
     print(f"Current directory: {os.getcwd()}")
-    print(f"Model file exists: {os.path.exists('loan_model.pkl')}")
-    app.run(debug=True, host='0.0.0.0', port=8080)
+    print(f"Model file exists: {model_path.exists()}")
+    port = int(os.environ.get("PORT", "8080"))
+    app.run(debug=True, host="0.0.0.0", port=port)
