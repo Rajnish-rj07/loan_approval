@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Prediction System - India</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏦 Loan Prediction System</h1>
+            <p class="subtitle">Get instant loan approval predictions using Machine Learning</p>
+        </header>
+
+        <div class="form-container">
+            <form action="/predict" method="POST">
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" id="age" name="age" placeholder="Enter your age" required min="18" max="100">
+                    <small>Age must be between 18 and 100</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="income">Annual Income (₹)</label>
+                    <input type="number" id="income" name="income" placeholder="e.g., 713430" required min="0" step="any">
+                    <small>Your yearly income in Indian Rupees (₹)</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="loan_amount">Loan Amount (₹)</label>
+                    <input type="number" id="loan_amount" name="loan_amount" placeholder="e.g., 35000" required min="0" step="any">
+                    <small>Amount you wish to borrow in Rupees (₹)</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="credit_score">Credit Score (CIBIL)</label>
+                    <input type="number" id="credit_score" name="credit_score" placeholder="Enter CIBIL score" required min="300" max="900">
+                    <small>CIBIL score between 300 and 900</small>
+                </div>
+
+                <button type="submit" class="btn-submit">Predict Loan Approval</button>
+            </form>
+        </div>
+
+        <div class="info-section">
+            <h3>How it works</h3>
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="icon">📝</span>
+                    <h4>Enter Details</h4>
+                    <p>Fill in your age, income, loan amount, and credit score</p>
+                </div>
+                <div class="info-card">
+                    <span class="icon">🤖</span>
+                    <h4>ML Prediction</h4>
+                    <p>Our Decision Tree model analyzes your information</p>
+                </div>
+                <div class="info-card">
+                    <span class="icon">✅</span>
+                    <h4>Get Result</h4>
+                    <p>Receive instant approval/rejection prediction</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Developed by Rajnish Kumar Maurya (2201234) | Machine Learning Project</p>
+        </footer>
+    </div>
+</body>
+</html>

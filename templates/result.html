@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result - Loan Prediction System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏦 Loan Prediction System</h1>
+            <p class="subtitle">Prediction Result</p>
+        </header>
+
+        {% if error %}
+        <div class="result-container error">
+            <div class="result-icon">❌</div>
+            <h2>Error</h2>
+            <p class="error-message">{{ error }}</p>
+            <a href="/" class="btn-back">Try Again</a>
+        </div>
+        {% else %}
+        <div class="result-container {% if result.approved %}approved{% else %}rejected{% endif %}">
+            <div class="result-icon">
+                {% if result.approved %}
+                    ✅
+                {% else %}
+                    ❌
+                {% endif %}
+            </div>
+            
+            <h2 class="result-title">
+                {% if result.approved %}
+                    Loan Approved!
+                {% else %}
+                    Loan Rejected
+                {% endif %}
+            </h2>
+
+            <div class="probability-section">
+                <div class="probability-bar">
+                    <div class="probability-fill {% if result.approved %}approved-bar{% else %}rejected-bar{% endif %}" 
+                         data-width="{% if result.approved %}{{ result.approval_probability }}{% else %}{{ result.rejection_probability }}{% endif %}">
+                    </div>
+                </div>
+                <p class="probability-text">
+                    {% if result.approved %}
+                        Approval Probability: <strong>{{ "%.2f"|format(result.approval_probability) }}%</strong>
+                    {% else %}
+                        Rejection Probability: <strong>{{ "%.2f"|format(result.rejection_probability) }}%</strong>
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="details-section">
+                <h3>Application Details</h3>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Age:</span>
+                        <span class="detail-value">{{ result.age }} years</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Annual Income:</span>
+                        <span class="detail-value">₹{{ "{:,.0f}".format(result.income) }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Loan Amount:</span>
+                        <span class="detail-value">₹{{ "{:,.0f}".format(result.loan_amount) }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">CIBIL Score:</span>
+                        <span class="detail-value">{{ result.credit_score }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="probability-breakdown">
+                <h4>Probability Breakdown</h4>
+                <div class="breakdown-item">
+                    <span>Approval Probability:</span>
+                    <span class="approved-text">{{ "%.2f"|format(result.approval_probability) }}%</span>
+                </div>
+                <div class="breakdown-item">
+                    <span>Rejection Probability:</span>
+                    <span class="rejected-text">{{ "%.2f"|format(result.rejection_probability) }}%</span>
+                </div>
+            </div>
+
+            <a href="/" class="btn-back">Make Another Prediction</a>
+        </div>
+        {% endif %}
+
+        <footer>
+            <p>Developed by Rajnish Kumar Maurya (2201234) | Machine Learning Project</p>
+        </footer>
+    </div>
+
+    <script>
+        // Set probability bar width dynamically to avoid CSS linter errors with Jinja2
+        document.addEventListener('DOMContentLoaded', function() {
+            const probabilityBar = document.querySelector('.probability-fill');
+            if (probabilityBar) {
+                const width = probabilityBar.getAttribute('data-width');
+                probabilityBar.style.width = width + '%';
+            }
+        });
+    </script>
+</body>
+</html>

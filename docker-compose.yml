@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  loan-prediction-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: loan-prediction:latest
+    container_name: loan-prediction-app
+    ports:
+      - "8080:8080"
+    environment:
+      - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1
+    volumes:
+      # Mount model file if you want to update it without rebuilding
+      - ./loan_model.pkl:/app/loan_model.pkl:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - loan-app-network
+
+networks:
+  loan-app-network:
+    driver: bridge
